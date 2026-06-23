@@ -1,0 +1,388 @@
+---
+import { getHotProduct, formatPrice, getWhatsAppUrl } from "../lib/data";
+import ProductImage from "./ProductImage.astro";
+
+const product = getHotProduct();
+if (!product) return;
+
+const whatsappUrl = getWhatsAppUrl(
+  product.whatsapp,
+  `Hola, estoy interesado en tu producto: ${product.name}`,
+);
+---
+
+<section class="hot-product" id="hot-product">
+  <div class="container">
+    <div class="hot-header">
+      <span class="hot-badge">✦ Producto Destacado</span>
+      <h2 class="section-title">Sistema de la Semana</h2>
+      <p class="section-subtitle">
+        Nuestro producto más reciente — recién agregado y listo para descubrir.
+      </p>
+    </div>
+
+    <article class="hot-card">
+      <div class="hot-card-inner">
+        <a
+          href={`/products/${product.slug}`}
+          class="hot-visual"
+          aria-label={`Ver detalles de ${product.name}`}
+        >
+          <ProductImage
+            src={product.image}
+            alt={product.name}
+            priority={true}
+          />
+          <div class="hot-visual-overlay">
+            <span class="hot-visual-label">Ver Detalles</span>
+          </div>
+        </a>
+
+        <div class="hot-body">
+          <div class="hot-meta">
+            <span class="hot-category">{product.category}</span>
+            <span class="hot-type">{product.type}</span>
+            <span class="hot-rating">★ {product.rating}</span>
+          </div>
+
+          <h3 class="hot-name">
+            <a href={`/products/${product.slug}`}>{product.name}</a>
+          </h3>
+          <p class="hot-desc">{product.shortDescription}</p>
+
+          <div class="hot-tags">
+            {
+              product.tags
+                .slice(0, 4)
+                .map((tag) => <span class="hot-tag">{tag}</span>)
+            }
+          </div>
+
+          <div class="hot-row">
+            <div class="hot-price">
+              <span class="hot-price-value"
+                >{formatPrice(product.price, product.currency)}</span
+              >
+              <span class="hot-seller">por {product.seller}</span>
+            </div>
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hot-whatsapp"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                ><path
+                  d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                ></path><path d="M8 10h.01"></path><path d="M12 10h.01"
+                ></path><path d="M16 10h.01"></path></svg
+              >
+              Contactar
+            </a>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<style>
+  .hot-product {
+    padding: var(--space-4xl) 0;
+  }
+
+  .hot-header {
+    text-align: center;
+    margin-bottom: var(--space-3xl);
+  }
+
+  .hot-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-badge);
+    background: var(--color-badge-light);
+    padding: 0.5rem 1.25rem;
+    border-radius: 100px;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hot-card {
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    box-shadow:
+      0 1px 2px rgba(26, 26, 46, 0.05),
+      0 12px 48px rgba(13, 115, 119, 0.08);
+    border: 1px solid var(--color-border-light);
+    transition:
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .hot-card:hover {
+    box-shadow:
+      0 1px 2px rgba(26, 26, 46, 0.05),
+      0 20px 64px rgba(13, 115, 119, 0.12);
+    border-color: var(--color-highlight-light);
+  }
+
+  .hot-card-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    color: inherit;
+  }
+
+  .hot-visual {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-bg);
+    min-height: 340px;
+    display: block; /* Asegura comportamiento de bloque */
+  }
+
+  .hot-visual :global(.product-img-wrapper) {
+    position: absolute;
+    inset: 0;
+    aspect-ratio: unset;
+    height: 100%;
+  }
+
+  .hot-visual :global(.product-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .hot-card:hover .hot-visual :global(.product-img) {
+    transform: scale(1.05);
+  }
+
+  .hot-visual-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(26, 26, 46, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .hot-card:hover .hot-visual-overlay {
+    opacity: 1;
+  }
+
+  .hot-visual-label {
+    color: white;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.625rem 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-md);
+    backdrop-filter: blur(4px);
+    letter-spacing: 0.02em;
+  }
+
+  .hot-body {
+    padding: var(--space-2xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .hot-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  .hot-category,
+  .hot-type {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+  }
+
+  .hot-category {
+    background: var(--color-accent-light);
+    color: var(--color-accent);
+  }
+
+  .hot-type {
+    background: var(--color-highlight-light);
+    color: var(--color-highlight);
+  }
+
+  .hot-rating {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-highlight);
+    margin-left: auto;
+  }
+
+  .hot-name {
+    font-size: 1.65rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    color: var(--color-text-primary);
+  }
+
+  .hot-name a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;
+  }
+
+  .hot-card:hover .hot-name a {
+    color: var(--color-accent);
+  }
+
+  .hot-desc {
+    font-size: 0.925rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .hot-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .hot-tag {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    background: var(--color-bg);
+    padding: 0.25rem 0.7rem;
+    border-radius: 100px;
+    border: 1px solid var(--color-border-light);
+  }
+
+  .hot-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border-light);
+    margin-top: auto;
+  }
+
+  .hot-price {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .hot-price-value {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    line-height: 1;
+  }
+
+  .hot-seller {
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+  }
+
+  .hot-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.625rem 1.25rem;
+    background: var(--color-accent);
+    color: white;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.2);
+    flex-shrink: 0;
+  }
+
+  .hot-whatsapp:hover {
+    background: #20bd5a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
+  }
+
+  @media (max-width: 900px) {
+    .hot-product {
+      padding: var(--space-3xl) 0;
+    }
+    .hot-visual {
+      min-height: 260px;
+    }
+    .hot-body {
+      padding: var(--space-xl);
+    }
+    .hot-name {
+      font-size: 1.4rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hot-card-inner {
+      grid-template-columns: 1fr;
+    }
+    .hot-visual {
+      min-height: 220px;
+    }
+    .hot-body {
+      padding: var(--space-lg);
+      gap: var(--space-sm);
+    }
+    .hot-name {
+      font-size: 1.25rem;
+    }
+    .hot-desc {
+      font-size: 0.85rem;
+    }
+    .hot-row {
+      flex-direction: row; /* Mantenemos horizontal en móviles si el espacio lo permite */
+      align-items: center;
+    }
+  }
+
+  /* Ajuste extra por si el precio y el botón quedan muy apretados en pantallas muy pequeñas */
+  @media (max-width: 400px) {
+    .hot-row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-sm);
+    }
+    .hot-whatsapp {
+      width: 100%;
+    }
+  }
+</style>

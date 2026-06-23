@@ -1,0 +1,78 @@
+---
+import { getStats } from '../lib/data';
+const stats = getStats();
+---
+
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-number">{stats.totalProducts}</span>
+        <span class="stat-label">Productos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{stats.totalSellers}</span>
+        <span class="stat-label">Vendedores</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{stats.totalCategories}</span>
+        <span class="stat-label">Categorías</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{stats.totalTypes}</span>
+        <span class="stat-label">Tipos</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .stats-section {
+    padding: var(--space-2xl) 0;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-xl);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-2xl);
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .stat-number {
+    font-family: var(--font-heading);
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: var(--color-text-tertiary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 640px) {
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+      padding: var(--space-lg);
+      gap: var(--space-lg);
+      border-radius: var(--radius-xl);
+    }
+    .stat-number {
+      font-size: 1.75rem;
+    }
+  }
+</style>

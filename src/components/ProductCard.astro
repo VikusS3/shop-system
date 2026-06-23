@@ -1,0 +1,198 @@
+---
+import type { Product } from '../lib/data';
+import { formatPrice, getWhatsAppUrl } from '../lib/data';
+import ProductImage from './ProductImage.astro';
+
+export interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const whatsappUrl = getWhatsAppUrl(product.whatsapp, `Hello, I am interested in your product: ${product.name}`);
+---
+
+<article class="product-card">
+  <a href={`/products/${product.slug}`} class="product-card-link">
+    <div class="product-card-image">
+      <ProductImage src={product.image} alt={product.name} />
+      {product.featured && <span class="card-featured-badge">Destacado</span>}
+    </div>
+    <div class="product-card-body">
+      <div class="card-meta">
+        <span class="card-category">{product.category}</span>
+        <span class="card-rating">★ {product.rating}</span>
+      </div>
+      <h3 class="card-title">{product.name}</h3>
+      <p class="card-desc">{product.shortDescription}</p>
+      <div class="card-seller">por {product.seller}</div>
+      <div class="card-tags">
+        {product.tags.slice(0, 3).map(tag => <span class="card-tag">{tag}</span>)}
+      </div>
+      <div class="card-footer">
+        <span class="card-price">{formatPrice(product.price, product.currency)}</span>
+        <span class="card-view">Ver Detalles →</span>
+      </div>
+    </div>
+  </a>
+  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" class="card-whatsapp">
+    Contactar Vendedor
+  </a>
+</article>
+
+<style>
+  .product-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-border);
+  }
+
+  .product-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .product-card-image {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-featured-badge {
+    position: absolute;
+    top: var(--space-sm);
+    left: var(--space-sm);
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.25rem 0.625rem;
+    border-radius: 100px;
+    background: var(--color-highlight);
+    color: white;
+    box-shadow: 0 2px 8px rgba(212, 163, 115, 0.3);
+  }
+
+  .product-card-body {
+    padding: var(--space-lg) var(--space-lg) var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    flex: 1;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+  }
+
+  .card-category {
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    background: var(--color-accent-light);
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+  }
+
+  .card-rating {
+    font-size: 0.8rem;
+    color: var(--color-highlight);
+    font-weight: 500;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-seller {
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .card-tag {
+    font-size: 0.7rem;
+    color: var(--color-text-tertiary);
+    background: var(--color-bg);
+    padding: 0.2rem 0.5rem;
+    border-radius: 100px;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: var(--space-sm);
+    padding-bottom: 0;
+  }
+
+  .card-price {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+
+  .card-view {
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .product-card:hover .card-view {
+    color: var(--color-accent);
+  }
+
+  .card-whatsapp {
+    display: block;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    border-top: 1px solid var(--color-border-light);
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .card-whatsapp:hover {
+    background: var(--color-accent-light);
+    color: var(--color-accent-hover);
+  }
+</style>

@@ -1,0 +1,221 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import Footer from '../../components/Footer.astro';
+import { getCategories, getProductsByCategory, slugify } from '../../lib/data';
+
+export async function getStaticPaths() {
+  const categories = getCategories();
+  return categories.map(cat => ({
+    params: { category: slugify(cat) },
+    props: { category: cat },
+  }));
+}
+
+const { category } = Astro.props;
+const products = getProductsByCategory(category);
+const allCategories = getCategories();
+const cleanName = category;
+const catSlug = slugify(category);
+const catUrl = `https://webmarket.com/category/${catSlug}`;
+
+const categoryDescription = `Explora los mejores productos y servicios de ${cleanName} en WebMarket. Encuentra soluciones ${cleanName.toLowerCase()}, compara precios y contacta vendedores directamente.`;
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://webmarket.com" },
+    { "@type": "ListItem", "position": 2, "name": cleanName, "item": catUrl }
+  ]
+};
+
+const collectionSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": `${cleanName} — WebMarket Marketplace`,
+  "description": categoryDescription,
+  "url": catUrl,
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": products.map((p, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "url": `https://webmarket.com/products/${p.slug}`
+    }))
+  }
+};
+---
+
+<Layout title={`${cleanName} — WebMarket Marketplace`} description={categoryDescription} canonical={`/category/${catSlug}`}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
+  <Navbar />
+
+  <main class="category-page">
+    <div class="container">
+      <nav class="breadcrumbs">
+        <a href="/">Inicio</a>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-current">{cleanName}</span>
+      </nav>
+
+      <div class="category-header">
+        <div>
+          <h1 class="category-title">{cleanName}</h1>
+          <p class="category-subtitle">{products.length} producto{products.length !== 1 ? 's' : ''} disponible{products.length !== 1 ? 's' : ''} en esta categoría.</p>
+        </div>
+      </div>
+
+      <div class="category-layout">
+        <aside class="category-sidebar">
+          <h3 class="sidebar-title">Categorías</h3>
+          <nav class="sidebar-nav">
+            {allCategories.map(cat => {
+              const slug = slugify(cat);
+              const isActive = cat === cleanName;
+              return (
+                <a
+                  href={`/category/${slug}`}
+                  class={`sidebar-link ${isActive ? 'active' : ''}`}
+                >
+                  {cat}
+                </a>
+              );
+            })}
+          </nav>
+        </aside>
+
+        <div class="category-products">
+          {products.length > 0 ? (
+            <div class="grid-3">
+              {products.map(product => (
+                <ProductCard product={product} />
+              ))}
+            </div>
+          ) : (
+            <div class="category-empty">
+              <p>No hay productos en esta categoría.</p>
+              <a href="/" class="btn btn-primary">Ver Todos los Productos</a>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .category-page {
+    padding: var(--space-2xl) 0 var(--space-4xl);
+  }
+
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.85rem;
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-xl);
+  }
+
+  .breadcrumbs a {
+    transition: color 0.2s;
+  }
+  .breadcrumbs a:hover {
+    color: var(--color-accent);
+  }
+  .breadcrumb-sep {
+    color: var(--color-border);
+  }
+  .breadcrumb-current {
+    color: var(--color-text-secondary);
+  }
+
+  .category-header {
+    margin-bottom: var(--space-2xl);
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .category-title {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: var(--space-sm);
+  }
+
+  .category-subtitle {
+    font-size: 1rem;
+    color: var(--color-text-tertiary);
+  }
+
+  .category-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: var(--space-2xl);
+  }
+
+  .category-sidebar {
+    position: sticky;
+    top: 6rem;
+    align-self: start;
+  }
+
+  .sidebar-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-md);
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .sidebar-link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    transition: all 0.15s;
+  }
+
+  .sidebar-link:hover {
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+  }
+
+  .sidebar-link.active {
+    background: var(--color-accent-light);
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  .category-empty {
+    text-align: center;
+    padding: var(--space-4xl);
+    color: var(--color-text-tertiary);
+  }
+
+  .category-empty .btn {
+    margin-top: var(--space-lg);
+  }
+
+  @media (max-width: 768px) {
+    .category-layout {
+      grid-template-columns: 1fr;
+    }
+    .category-sidebar {
+      display: none;
+    }
+  }
+</style>

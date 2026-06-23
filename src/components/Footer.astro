@@ -1,0 +1,160 @@
+---
+
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo">
+          <span class="footer-logo-icon">◆</span>
+          <span>WebMarket</span>
+        </a>
+        <p class="footer-desc">
+          El marketplace premium para descubrir sistemas web, productos SaaS y
+          servicios digitales. Conecta directamente con desarrolladores y
+          vendedores.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Explorar</h4>
+        <a href="/" class="footer-link">Inicio</a>
+        <a href="/category/sistemas-empresariales" class="footer-link"
+          >Sistemas Empresariales</a
+        >
+        <a href="/category/herramientas-de-ia" class="footer-link"
+          >Herramientas de IA</a
+        >
+        <a href="/category/servicios-web" class="footer-link">Servicios Web</a>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Vendedores</h4>
+        <a href="/#publish" class="footer-link">Publica tu Sistema</a>
+        <a
+          href="https://wa.me/51906492166"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="footer-link">Contáctanos</a
+        >
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Contacto</h4>
+        <a
+          href="https://wa.me/51906492166"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="footer-link">WhatsApp</a
+        >
+        <p class="footer-text">Disponible Lun–Vie, 9am–6pm</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>
+        &copy; {new Date().getFullYear()} WebMarket. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-text-primary);
+    color: rgba(255, 255, 255, 0.85);
+    padding: var(--space-4xl) 0 var(--space-xl);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: var(--space-3xl);
+    margin-bottom: var(--space-3xl);
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: var(--space-md);
+    color: white;
+  }
+
+  .footer-logo-icon {
+    color: var(--color-highlight);
+  }
+
+  .footer-desc {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.6);
+    max-width: 320px;
+  }
+
+  .footer-heading {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-lg);
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .footer-link {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 0.2s;
+  }
+
+  .footer-link:hover {
+    color: white;
+  }
+
+  .footer-text {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .footer-bottom {
+    padding-top: var(--space-xl);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  @media (max-width: 768px) {
+    .footer {
+      padding: var(--space-3xl) 0 var(--space-lg);
+    }
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2xl);
+      margin-bottom: var(--space-2xl);
+    }
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+    .footer-desc {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-xl);
+    }
+  }
+</style>

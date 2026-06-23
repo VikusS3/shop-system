@@ -1,11 +1,192 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import HotProduct from '../components/HotProduct.astro';
+import Stats from '../components/Stats.astro';
+import ProductCard from '../components/ProductCard.astro';
+import PublishSection from '../components/PublishSection.astro';
+import Footer from '../components/Footer.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import { getAllProducts, getFeaturedProducts, getCategories, getProductsByCategory, getStats, slugify } from '../lib/data';
+
+const allProducts = getAllProducts();
+const featuredProducts = getFeaturedProducts();
+const categories = getCategories();
+const stats = getStats();
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "WebMarket",
+  "url": "https://webmarket.com",
+  "description": "Marketplace de sistemas web premium, productos SaaS y servicios digitales.",
+  "numberOfEmployees": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 10 }
+};
+
+const webSiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "WebMarket",
+  "url": "https://webmarket.com",
+  "description": "Marketplace de sistemas web premium, productos SaaS y servicios digitales.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://webmarket.com/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+};
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="WebMarket — Marketplace de Sistemas Web y SaaS Premium" description="Descubre sistemas web premium, productos SaaS y servicios digitales. Explora, compara y contacta vendedores directamente.">
+  <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(webSiteSchema)} />
+  <Navbar />
+  <Hero />
+
+  <HotProduct />
+
+  <Stats />
+
+  <section class="section" id="featured">
+    <div class="container">
+      <h2 class="section-title">Productos Destacados</h2>
+      <p class="section-subtitle">Sistemas y servicios seleccionados por su calidad e innovación.</p>
+      <div class="grid-3">
+        {featuredProducts.slice(0, 6).map(product => (
+          <ProductCard product={product} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section categories-section">
+    <div class="container">
+      <h2 class="section-title">Explorar por Categoría</h2>
+      <p class="section-subtitle">Encuentra exactamente lo que necesitas en nuestras categorías.</p>
+      <div class="categories-grid">
+        {categories.map(cat => {
+          const prodCount = getProductsByCategory(cat).length;
+          const catSlug = slugify(cat);
+          return (
+            <a href={`/category/${catSlug}`} class="category-card">
+              <div class="category-icon">{cat.charAt(0)}</div>
+              <div class="category-info">
+                <h3 class="category-name">{cat}</h3>
+                <span class="category-count">{prodCount} producto{prodCount !== 1 ? 's' : ''}</span>
+              </div>
+              <span class="category-arrow">→</span>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Todos los Productos</h2>
+      <p class="section-subtitle">Explora nuestra colección completa de sistemas web, productos SaaS y servicios digitales.</p>
+      <div class="grid-4">
+        {allProducts.map(product => (
+          <ProductCard product={product} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <PublishSection />
+  <Footer />
 </Layout>
+
+<style>
+  .categories-section {
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border-light);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  .category-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .category-card:hover {
+    border-color: var(--color-accent);
+    background: var(--color-accent-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .category-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    flex-shrink: 0;
+    border: 1px solid var(--color-border-light);
+  }
+
+  .category-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .category-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+  }
+
+  .category-count {
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+  }
+
+  .category-arrow {
+    color: var(--color-text-tertiary);
+    font-size: 1.1rem;
+    transition: transform 0.2s;
+  }
+
+  .category-card:hover .category-arrow {
+    transform: translateX(4px);
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 768px) {
+    .categories-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .categories-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
