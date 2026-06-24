@@ -6,6 +6,7 @@ export interface Props {
   ogType?: string;
   canonical?: string;
 }
+import { ClientRouter } from "astro:transitions";
 
 const {
   title = "WebMarket — Marketplace de Sistemas Web y SaaS Premium",
@@ -34,6 +35,8 @@ const siteName = "WebMarket";
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
+
+    <ClientRouter />
 
     <title>{title}</title>
     <meta name="description" content={description} />

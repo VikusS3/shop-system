@@ -1,22 +1,22 @@
 [
   {
     "id": 1,
-    "name": "Sistema de Gestión de Farmacias",
-    "slug": "sistema-gestion-farmacias",
-    "description": "Solución completa para la gestión de farmacias que optimiza operaciones, control de inventario y servicio al cliente. Gestión de recetas, seguimiento de existencias en tiempo real, ventas con POS integrado y generación de informes detallados. Soporta operaciones multi-sucursal con acceso centralizado a datos y seguridad basada en roles.",
+    "name": "Carta Next",
+    "slug": "carta-next",
+    "description": "Sistema SaaS completo para crear menús digitales, catálogos y tiendas virtuales con carrito a WhatsApp, múltiples plantillas, panel administrativo, IA integrada y código fuente incluido.",
     "shortDescription": "Gestión completa de farmacias con inventario, recetas, POS y soporte multi-sucursal.",
-    "image": "/products/pharmacy.jpg",
+    "image": "/products/carta-next.webp",
     "video": "",
-    "seller": "CodeCraft Solutions",
-    "whatsapp": "+51999999901",
-    "price": 299,
-    "currency": "USD",
-    "category": "Sistemas Empresariales",
+    "seller": "Yan Zapata",
+    "whatsapp": "+51910500683",
+    "price": 1500,
+    "currency": "PEN",
+    "category": "Servicios Web",
     "type": "Sistema",
-    "tags": ["Inventario", "Ventas", "POS", "Recetas", "Reportes"],
-    "rating": 4.8,
+    "tags": ["Menú", "Cocina", "Automatización", "Editor", "Imagen", "IA"],
+    "rating": 5.0,
     "featured": true,
-    "createdAt": "2026-06-15"
+    "createdAt": "2026-06-24"
   },
   {
     "id": 2,
@@ -34,7 +34,7 @@
     "type": "Sistema",
     "tags": ["Inventario", "Código de Barras", "Análisis", "Almacén"],
     "rating": 4.7,
-    "featured": true,
+    "featured": false,
     "createdAt": "2026-06-10"
   },
   {
@@ -433,7 +433,7 @@
     "type": "SaaS",
     "tags": ["E-commerce", "Tienda", "Compras", "Ventas Online"],
     "rating": 4.7,
-    "featured": true,
+    "featured": false,
     "createdAt": "2026-06-22"
   },
   {
