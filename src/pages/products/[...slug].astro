@@ -185,6 +185,34 @@ const breadcrumbSchema = {
           </div>
 
           <div class="detail-actions">
+            {
+              product.website && (
+                <a
+                  href={product.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn btn-outline btn-lg detail-website-btn"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <>
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </>
+                  </svg>
+                  Visitar Sitio Web
+                </a>
+              )
+            }
             <a
               href={whatsappUrl}
               target="_blank"
@@ -428,6 +456,21 @@ const breadcrumbSchema = {
   .detail-whatsapp-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .detail-website-btn {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: var(--space-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--color-border-light);
+  }
+
+  .detail-website-btn:hover {
+    background: var(--color-accent-light);
+    border-color: var(--color-accent);
   }
 
   .detail-action-note {

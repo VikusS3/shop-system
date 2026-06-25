@@ -37,8 +37,10 @@ const whatsappUrl = getWhatsAppUrl(
 
         <div class="hot-body">
           <div class="hot-meta">
-            <span class="hot-category">{product.category}</span>
-            <span class="hot-type">{product.type}</span>
+            <span class="hot-category" title={product.category}
+              >{product.category}</span
+            >
+            <span class="hot-type" title={product.type}>{product.type}</span>
             <span class="hot-rating">★ {product.rating}</span>
           </div>
 
@@ -62,28 +64,58 @@ const whatsappUrl = getWhatsAppUrl(
               >
               <span class="hot-seller">por {product.seller}</span>
             </div>
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="hot-whatsapp"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                ><path
-                  d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-                ></path><path d="M8 10h.01"></path><path d="M12 10h.01"
-                ></path><path d="M16 10h.01"></path></svg
+            <div class="hot-actions">
+              {
+                product.website && (
+                  <a
+                    href={product.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hot-website"
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <>
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="2" y1="12" x2="22" y2="12" />
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                      </>
+                    </svg>
+                    <span>Sitio Web</span>
+                  </a>
+                )
+              }
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hot-whatsapp"
               >
-              Contactar
-            </a>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  ><path
+                    d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                  ></path><path d="M8 10h.01"></path><path d="M12 10h.01"
+                  ></path><path d="M16 10h.01"></path></svg
+                >
+                <span>Contactar</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -124,9 +156,8 @@ const whatsappUrl = getWhatsAppUrl(
       0 1px 2px rgba(26, 26, 46, 0.05),
       0 12px 48px rgba(13, 115, 119, 0.08);
     border: 1px solid var(--color-border-light);
-    transition:
-      box-shadow 0.3s ease,
-      border-color 0.3s ease;
+    transition: all 0.3s ease;
+    background: var(--color-surface);
   }
 
   .hot-card:hover {
@@ -138,7 +169,8 @@ const whatsappUrl = getWhatsAppUrl(
 
   .hot-card-inner {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* Ajuste desktop: 45% imagen, 55% contenido para mejor legibilidad */
+    grid-template-columns: 45% 55%;
     color: inherit;
   }
 
@@ -146,8 +178,8 @@ const whatsappUrl = getWhatsAppUrl(
     position: relative;
     overflow: hidden;
     background: var(--color-bg);
-    min-height: 340px;
-    display: block; /* Asegura comportamiento de bloque */
+    min-height: 100%; /* Deja que se acople a la altura del texto */
+    display: block;
   }
 
   .hot-visual :global(.product-img-wrapper) {
@@ -165,7 +197,7 @@ const whatsappUrl = getWhatsAppUrl(
   }
 
   .hot-card:hover .hot-visual :global(.product-img) {
-    transform: scale(1.05);
+    transform: scale(1.03);
   }
 
   .hot-visual-overlay {
@@ -200,13 +232,14 @@ const whatsappUrl = getWhatsAppUrl(
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
+    min-width: 0; /* Evita desbordamiento de hijos flex */
   }
 
   .hot-meta {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
-    flex-wrap: wrap;
+    gap: var(--space-xs);
+    flex-wrap: wrap; /* Evita colisión de badges en pantallas medianas */
   }
 
   .hot-category,
@@ -217,6 +250,10 @@ const whatsappUrl = getWhatsAppUrl(
     letter-spacing: 0.07em;
     padding: 0.25rem 0.75rem;
     border-radius: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px; /* Evita que pisen a la calificación si los textos son largos */
   }
 
   .hot-category {
@@ -233,11 +270,12 @@ const whatsappUrl = getWhatsAppUrl(
     font-size: 0.85rem;
     font-weight: 500;
     color: var(--color-highlight);
-    margin-left: auto;
+    margin-left: auto; /* Empuja siempre la calificación a la derecha */
+    white-space: nowrap;
   }
 
   .hot-name {
-    font-size: 1.65rem;
+    font-size: 1.75rem;
     font-weight: 700;
     letter-spacing: -0.025em;
     line-height: 1.2;
@@ -255,11 +293,12 @@ const whatsappUrl = getWhatsAppUrl(
   }
 
   .hot-desc {
-    font-size: 0.925rem;
+    font-size: 0.95rem;
     color: var(--color-text-secondary);
     line-height: 1.6;
+    /* Un Producto Destacado horizontal puede aguantar hasta 3 líneas sin problemas visuales */
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -280,25 +319,28 @@ const whatsappUrl = getWhatsAppUrl(
     border: 1px solid var(--color-border-light);
   }
 
+  /* --- SECCIÓN CRÍTICA DE BOTONES --- */
   .hot-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-md);
+    gap: var(--space-lg);
     padding-top: var(--space-md);
     border-top: 1px solid var(--color-border-light);
-    margin-top: auto;
+    margin-top: auto; /* Se pega al fondo de la card de forma uniforme */
+    flex-wrap: wrap; /* Permite saltar de línea si el espacio horizontal colapsa */
   }
 
   .hot-price {
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
+    min-width: 120px;
   }
 
   .hot-price-value {
     font-family: var(--font-heading);
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 700;
     color: var(--color-accent);
     line-height: 1;
@@ -309,76 +351,139 @@ const whatsappUrl = getWhatsAppUrl(
     color: var(--color-text-tertiary);
   }
 
-  .hot-whatsapp {
+  .hot-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex: 1;
+    justify-content: flex-end;
+    min-width: 240px; /* Evita que los botones se queden sin espacio en pantallas intermedias */
+  }
+
+  .hot-whatsapp,
+  .hot-website {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.45rem;
-    padding: 0.625rem 1.25rem;
-    background: var(--color-accent);
-    color: white;
+    padding: 0.65rem 1.25rem;
     font-family: var(--font-body);
     font-size: 0.85rem;
     font-weight: 500;
     border-radius: var(--radius-md);
     text-decoration: none;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.2);
-    flex-shrink: 0;
+    flex: 1; /* Crecen proporcionalmente si es necesario */
+    max-width: 160px; /* Límite elegante en desktop */
+    white-space: nowrap;
+  }
+
+  .hot-whatsapp {
+    background: var(--color-accent);
+    color: white;
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.15);
   }
 
   .hot-whatsapp:hover {
-    background: #20bd5a;
+    background: var(--color-accent-hover);
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
+    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.25);
   }
 
-  @media (max-width: 900px) {
-    .hot-product {
-      padding: var(--space-3xl) 0;
-    }
-    .hot-visual {
-      min-height: 260px;
+  .hot-website {
+    background: var(--color-bg);
+    color: var(--color-accent);
+    border: 1px solid var(--color-border-light);
+  }
+
+  .hot-website:hover {
+    background: var(--color-accent-light);
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+  }
+
+  /* --- RESPONSIVE MEDIA QUERIES --- */
+
+  /* Tablets y Laptops Pequeñas */
+  @media (max-width: 1024px) {
+    .hot-card-inner {
+      grid-template-columns: 40% 60%; /* Más espacio para textos */
     }
     .hot-body {
       padding: var(--space-xl);
     }
-    .hot-name {
-      font-size: 1.4rem;
+    .hot-row {
+      gap: var(--space-md);
+    }
+    .hot-actions {
+      justify-content: flex-start; /* Se alinea mejor si salta abajo */
+      width: 100%;
     }
   }
 
-  @media (max-width: 640px) {
+  /* Vista de Tablet Vertical (Pasa a diseño vertical) */
+  @media (max-width: 768px) {
+    .hot-product {
+      padding: var(--space-2xl) 0;
+    }
     .hot-card-inner {
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr; /* Columna única */
     }
     .hot-visual {
-      min-height: 220px;
+      height: 280px; /* Altura fija para la imagen arriba */
+      min-height: unset;
     }
     .hot-body {
       padding: var(--space-lg);
-      gap: var(--space-sm);
     }
     .hot-name {
-      font-size: 1.25rem;
-    }
-    .hot-desc {
-      font-size: 0.85rem;
+      font-size: 1.4rem;
     }
     .hot-row {
-      flex-direction: row; /* Mantenemos horizontal en móviles si el espacio lo permite */
+      flex-direction: row;
       align-items: center;
+    }
+    .hot-actions {
+      width: auto;
+      flex: none;
     }
   }
 
-  /* Ajuste extra por si el precio y el botón quedan muy apretados en pantallas muy pequeñas */
-  @media (max-width: 400px) {
-    .hot-row {
-      flex-direction: column;
-      align-items: stretch;
-      gap: var(--space-sm);
+  /* Teléfonos Móviles standard */
+  @media (max-width: 550px) {
+    .hot-visual {
+      height: 200px;
     }
-    .hot-whatsapp {
+    .hot-meta {
+      width: 100%;
+    }
+    .hot-rating {
+      margin-left: 0; /* Se acopla al flujo en pantallas muy angostas */
+      width: 100%;
+      margin-top: 0.25rem;
+    }
+    .hot-row {
+      flex-direction: column; /* Apilamos precio y botones de forma limpia */
+      align-items: stretch;
+      gap: var(--space-md);
+    }
+    .hot-actions {
+      width: 100%;
+      min-width: unset;
+    }
+    .hot-whatsapp,
+    .hot-website {
+      max-width: none; /* Que ocupen el 50% cada uno equitativamente */
+    }
+  }
+
+  /* Teléfonos muy pequeños (Ej. iPhone SE) */
+  @media (max-width: 375px) {
+    .hot-actions {
+      flex-direction: column; /* Botones uno encima del otro */
+    }
+    .hot-whatsapp,
+    .hot-website {
       width: 100%;
     }
   }

@@ -8,6 +8,7 @@ export interface Product {
   shortDescription: string;
   image: string;
   video: string;
+  website?: string;
   seller: string;
   whatsapp: string;
   price: number;

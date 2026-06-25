@@ -1,14 +1,17 @@
 ---
-import type { Product } from '../lib/data';
-import { formatPrice, getWhatsAppUrl } from '../lib/data';
-import ProductImage from './ProductImage.astro';
+import type { Product } from "../lib/data";
+import { formatPrice, getWhatsAppUrl } from "../lib/data";
+import ProductImage from "./ProductImage.astro";
 
 export interface Props {
   product: Product;
 }
 
 const { product } = Astro.props;
-const whatsappUrl = getWhatsAppUrl(product.whatsapp, `Hello, I am interested in your product: ${product.name}`);
+const whatsappUrl = getWhatsAppUrl(
+  product.whatsapp,
+  `Hello, I am interested in your product: ${product.name}`,
+);
 ---
 
 <article class="product-card">
@@ -19,22 +22,48 @@ const whatsappUrl = getWhatsAppUrl(product.whatsapp, `Hello, I am interested in 
     </div>
     <div class="product-card-body">
       <div class="card-meta">
-        <span class="card-category">{product.category}</span>
+        <span class="card-category" title={product.category}
+          >{product.category}</span
+        >
         <span class="card-rating">★ {product.rating}</span>
       </div>
       <h3 class="card-title">{product.name}</h3>
       <p class="card-desc">{product.shortDescription}</p>
       <div class="card-seller">por {product.seller}</div>
       <div class="card-tags">
-        {product.tags.slice(0, 3).map(tag => <span class="card-tag">{tag}</span>)}
+        {
+          product.tags
+            .slice(0, 3)
+            .map((tag) => <span class="card-tag">{tag}</span>)
+        }
       </div>
       <div class="card-footer">
-        <span class="card-price">{formatPrice(product.price, product.currency)}</span>
+        <span class="card-price"
+          >{formatPrice(product.price, product.currency)}</span
+        >
         <span class="card-view">Ver Detalles →</span>
       </div>
     </div>
   </a>
-  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" class="card-whatsapp">
+  {
+    product.website && (
+      <a
+        href={product.website}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="card-website"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Visitar Sitio Web
+      </a>
+    )
+  }
+  <a
+    href={whatsappUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="card-whatsapp"
+  >
     Contactar Vendedor
   </a>
 </article>
@@ -62,6 +91,7 @@ const whatsappUrl = getWhatsAppUrl(product.whatsapp, `Hello, I am interested in 
     display: flex;
     flex-direction: column;
     flex: 1;
+    min-width: 0; /* Previene que flex items rompan el contenedor */
   }
 
   .product-card-image {
@@ -90,31 +120,43 @@ const whatsappUrl = getWhatsAppUrl(product.whatsapp, `Hello, I am interested in 
     flex-direction: column;
     gap: var(--space-sm);
     flex: 1;
+    min-width: 0; /* Previene desbordamiento de textos en 4 columnas */
   }
 
+  /* --- CAMBIOS PRINCIPALES AQUÍ --- */
   .card-meta {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-sm);
+    gap: var(--space-xs); /* Reducido un poco para dar más aire */
+    flex-wrap: wrap; /* Si no caben en 4 columnas, baja la puntuación de forma limpia */
   }
 
   .card-category {
     font-size: 0.7rem;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     color: var(--color-accent);
     background: var(--color-accent-light);
     padding: 0.2rem 0.6rem;
     border-radius: 100px;
+
+    /* Control de textos extra largos en la categoría */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70%; /* Evita que pise a la puntuación */
   }
 
   .card-rating {
     font-size: 0.8rem;
     color: var(--color-highlight);
     font-weight: 500;
+    white-space: nowrap; /* Evita que el "★" se separe del número */
+    margin-left: auto; /* Empuja la puntuación a la derecha si se envuelven */
   }
+  /* -------------------------------- */
 
   .card-title {
     font-size: 1.1rem;
@@ -159,11 +201,13 @@ const whatsappUrl = getWhatsAppUrl(product.whatsapp, `Hello, I am interested in 
     margin-top: auto;
     padding-top: var(--space-sm);
     padding-bottom: 0;
+    gap: var(--space-xs);
+    flex-wrap: wrap; /* Por si el precio y el "Ver detalles" también se aprietan */
   }
 
   .card-price {
     font-family: var(--font-heading);
-    font-size: 1.2rem;
+    font-size: 1.15rem; /* Bajado sutilmente de 1.2rem para prevenir colisiones */
     font-weight: 700;
     color: var(--color-accent);
   }
@@ -177,6 +221,25 @@ const whatsappUrl = getWhatsAppUrl(product.whatsapp, `Hello, I am interested in 
 
   .product-card:hover .card-view {
     color: var(--color-accent);
+  }
+
+  .card-website {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.65rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    border-top: 1px solid var(--color-border-light);
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .card-website:hover {
+    background: var(--color-accent-light);
+    color: var(--color-accent-hover);
   }
 
   .card-whatsapp {
